@@ -40,11 +40,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             MartinezSarayAnimalsAppTheme {
                 Scaffold(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize()
+                        .background(Color.Gray),
+                    contentColor = Color.Transparent,
+                    containerColor = Color.Transparent,
                     bottomBar = {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
+                                .padding(8.dp)
                         ) {
                             // This is CORRECT: align is used on a child inside the Box
                             Box(
