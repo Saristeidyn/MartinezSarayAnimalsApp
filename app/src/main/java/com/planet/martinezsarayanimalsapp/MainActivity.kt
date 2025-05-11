@@ -42,59 +42,46 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize()
                         .background(Color.Gray),
-                    contentColor = Color.Transparent,
                     containerColor = Color.Transparent,
+                    contentColor = Color.Transparent,
                     bottomBar = {
                         Box(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(8.dp)
+                                .padding(12.dp)
+                                .clip(RoundedCornerShape(30.dp))
+                                .background(Color(0xFFFFF8DC)) // creamy yellow
                         ) {
-                            // This is CORRECT: align is used on a child inside the Box
-                            Box(
-                                modifier = Modifier
-                                    .align(Alignment.BottomCenter) // ✅ This works!
-                                    .width(250.dp)
-                                    .clip(RoundedCornerShape(50))
-                                    .background(Color(0xFFFFF8DC))
-                                    .padding(8.dp)
+                            NavigationBar(
+                                containerColor = Color.Transparent, // already using background in Box
+                                tonalElevation = 0.dp, // to keep it flat if you want
+                                modifier = Modifier.clip(RoundedCornerShape(30.dp))
                             ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(12.dp),
-                                    horizontalArrangement = Arrangement.SpaceEvenly,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Row(
-                                        modifier = Modifier.clickable { /* Navigate to Animals */ },
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
+                                NavigationBarItem(
+                                    selected = true,
+                                    onClick = { /* Navigate to Animals */ },
+                                    icon = {
                                         Icon(
                                             imageVector = Icons.Default.Home,
                                             contentDescription = "Inicio",
-                                            modifier = Modifier.size(24.dp),
-                                            tint = Color.Black
+                                            modifier = Modifier.size(30.dp)
                                         )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text("Inicio", color = Color.Black)
-                                    }
-
-                                    // Ambiente Button
-                                    Row(
-                                        modifier = Modifier.clickable { /* Navigate to Ambientes */ },
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
+                                    },
+                                    label = { Text("Inicio") },
+                                    alwaysShowLabel = true
+                                )
+                                NavigationBarItem(
+                                    selected = false,
+                                    onClick = { /* Navigate to Ambientes */ },
+                                    icon = {
                                         Icon(
                                             imageVector = Icons.Default.Place,
                                             contentDescription = "Ambiente",
-                                            modifier = Modifier.size(24.dp),
-                                            tint = Color.Black
+                                            modifier = Modifier.size(30.dp)
                                         )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text("Ambiente", color = Color.Black)
-                                    }
-                                }
+                                    },
+                                    label = { Text("Ambiente") },
+                                    alwaysShowLabel = true
+                                )
                             }
                         }
                     }
