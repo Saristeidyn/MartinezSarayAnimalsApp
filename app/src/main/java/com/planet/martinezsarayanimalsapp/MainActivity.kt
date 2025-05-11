@@ -47,41 +47,48 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         Box(
                             modifier = Modifier
-                                .padding(12.dp)
-                                .clip(RoundedCornerShape(30.dp))
-                                .background(Color(0xFFFFF8DC)) // creamy yellow
+                                .fillMaxSize() // Make sure Box takes up the whole screen size
                         ) {
-                            NavigationBar(
-                                containerColor = Color.Transparent, // already using background in Box
-                                tonalElevation = 0.dp, // to keep it flat if you want
-                                modifier = Modifier.clip(RoundedCornerShape(30.dp))
+                            Box(
+                                modifier = Modifier
+                                    .padding(12.dp)
+                                    .width(250.dp)
+                                    .clip(RoundedCornerShape(30.dp))
+                                    .background(Color(0xFFFFF8DC)) // light yellow background
+                                    .align(Alignment.BottomCenter) // Corrected alignment here
                             ) {
-                                NavigationBarItem(
-                                    selected = true,
-                                    onClick = { /* Navigate to Animals */ },
-                                    icon = {
-                                        Icon(
-                                            imageVector = Icons.Default.Home,
-                                            contentDescription = "Inicio",
-                                            modifier = Modifier.size(30.dp)
-                                        )
-                                    },
-                                    label = { Text("Inicio") },
-                                    alwaysShowLabel = true
-                                )
-                                NavigationBarItem(
-                                    selected = false,
-                                    onClick = { /* Navigate to Ambientes */ },
-                                    icon = {
-                                        Icon(
-                                            imageVector = Icons.Default.Place,
-                                            contentDescription = "Ambiente",
-                                            modifier = Modifier.size(30.dp)
-                                        )
-                                    },
-                                    label = { Text("Ambiente") },
-                                    alwaysShowLabel = true
-                                )
+                                NavigationBar(
+                                    containerColor = Color.Transparent,
+                                    modifier = Modifier.clip(RoundedCornerShape(30.dp)),
+
+                                ) {
+                                    NavigationBarItem(
+                                        selected = true,
+                                        onClick = { /* Navigate to Animals */ },
+                                        icon = {
+                                            Icon(
+                                                imageVector = Icons.Default.Home,
+                                                contentDescription = "Inicio",
+                                                modifier = Modifier.size(30.dp)
+                                            )
+                                        },
+                                        label = { Text("Inicio") },
+                                        alwaysShowLabel = true
+                                    )
+                                    NavigationBarItem(
+                                        selected = false,
+                                        onClick = { /* Navigate to Ambientes */ },
+                                        icon = {
+                                            Icon(
+                                                imageVector = Icons.Default.Place,
+                                                contentDescription = "Ambiente",
+                                                modifier = Modifier.size(30.dp)
+                                            )
+                                        },
+                                        label = { Text("Ambiente") },
+                                        alwaysShowLabel = true
+                                    )
+                                }
                             }
                         }
                     }
