@@ -47,18 +47,17 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         Box(
                             modifier = Modifier
-                                .fillMaxSize() // Make sure Box takes up the whole screen size
+                                .fillMaxSize()
                         ) {
                             Box(
                                 modifier = Modifier
                                     .padding(12.dp)
                                     .width(250.dp)
-                                    .clip(RoundedCornerShape(30.dp))
-                                    .background(Color(0xFFFFF8DC)) // light yellow background
-                                    .align(Alignment.BottomCenter) // Corrected alignment here
+                                    .clip(RoundedCornerShape(50.dp))
+                                    .align(Alignment.BottomCenter)
                             ) {
                                 NavigationBar(
-                                    containerColor = Color.Transparent,
+                                    containerColor = Color(0xFFFFF8DC).copy(alpha = 0.7f),
                                     modifier = Modifier.clip(RoundedCornerShape(30.dp)),
 
                                 ) {
