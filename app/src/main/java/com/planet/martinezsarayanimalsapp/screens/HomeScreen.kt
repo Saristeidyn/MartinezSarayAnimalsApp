@@ -1,5 +1,6 @@
 package com.planet.martinezsarayanimalsapp.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -33,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.planet.martinezsarayanimalsapp.R
+import com.planet.martinezsarayanimalsapp.models.Nature
+import com.planet.martinezsarayanimalsapp.models.NatureItem
 import com.planet.martinezsarayanimalsapp.models.mockNature
 
 @Composable
@@ -83,16 +88,28 @@ fun HomeScreen (innerPadding: PaddingValues){
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        AsyncImage(
-            model = nature.image,
-            contentDescription = null,
-            placeholder = painterResource(R.drawable.ic_launcher_background),
-            error = painterResource(R.drawable.ic_launcher_background),
-            modifier = Modifier
-                .size(200.dp) // equal width and height for circle
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
-        )
+        LazyColumn {
+            items(){
+                Box(
+                    modifier = Modifier
+                        .size(200.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            // Add your onClick action here
+                        }
+                ) {
+                    AsyncImage(
+                        model = nature.image,
+                        contentDescription = null,
+                        placeholder = painterResource(R.drawable.ic_launcher_background),
+                        error = painterResource(R.drawable.ic_launcher_background),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.matchParentSize()
+                    )
+                }
+            }
+        }
+
 
         Text(text = "Nutria", color = Color.White)
     }
