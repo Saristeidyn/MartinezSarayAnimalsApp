@@ -1,5 +1,7 @@
 package com.planet.martinezsarayanimalsapp.screens
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,8 +17,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -24,6 +28,12 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,60 +46,109 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.planet.martinezsarayanimalsapp.R
-import com.planet.martinezsarayanimalsapp.models.Nature
 import com.planet.martinezsarayanimalsapp.models.NatureItem
 import com.planet.martinezsarayanimalsapp.models.mockNature
+import com.planet.martinezsarayanimalsapp.services.NatureService
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
-fun HomeScreen (innerPadding: PaddingValues){
-    val nature = mockNature
-    Column (
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Animals",
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 20.sp
-            )
+fun HomeScreen(innerPadding: PaddingValues) {
+    var natureList by remember {
+        mutableStateOf<List<NatureItem>>(emptyList())
+    }
+    val scope = rememberCoroutineScope()
+    val BASE_URL = "https://animals.juanfrausto.com/api/"
 
-            Button (
-                onClick = { /* Add your click logic here */ },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFF8DC)),
-                shape = RoundedCornerShape(16.dp),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Agregar",
-                        tint = Color.Black
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = "Agregar", color = Color.Black)
-                }
+    LaunchedEffect(key1 = true) {
+        scope.launch {
+            try {
+                val retrofit = Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+
+                val natureService = retrofit.create(NatureService::class.java)
+                natureList = natureService.getNature()
+            } catch (e: Exception) {
+                Log.e("HomeScreen", "Failed to fetch: ${e.message}", e)
             }
         }
-        Text(
-            text = "Conoce los animales más increibles del mundo",
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            color = Color.White)
+    }
 
-        Spacer(modifier = Modifier.height(4.dp))
+    // ✅ Check if list is empty, not null
+    if (natureList.isEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Loading or failed to fetch data...",
+                color = Color.White,
+                fontSize = 16.sp
+            )
+        }
+        return // Avoid drawing the rest of the UI
+    }
 
-        LazyColumn {
-            items(){
+    natureList.firstOrNull()?.let { nature ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Animals",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+
+                    Button(
+                        onClick = { /* Add your click logic here */ },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFF8DC)),
+                        shape = RoundedCornerShape(16.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = "Agregar",
+                                tint = Color.Black
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(text = "Agregar", color = Color.Black)
+                        }
+                    }
+                }
+
+                Text(
+                    text = "Conoce los animales más increibles del mundo",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    color = Color.White
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
                 Box(
                     modifier = Modifier
                         .size(200.dp)
@@ -107,10 +166,10 @@ fun HomeScreen (innerPadding: PaddingValues){
                         modifier = Modifier.matchParentSize()
                     )
                 }
+
+                // ✅ Use real name from API
+                Text(text = nature.name, color = Color.White)
             }
         }
-
-
-        Text(text = "Nutria", color = Color.White)
     }
 }
