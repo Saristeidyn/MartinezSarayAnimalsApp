@@ -7,3 +7,4 @@ interface NatureService {
     @GET("animals")
     suspend fun getNature(): List<NatureItem>
 }
+

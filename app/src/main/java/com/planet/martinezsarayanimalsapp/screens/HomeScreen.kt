@@ -2,10 +2,12 @@ package com.planet.martinezsarayanimalsapp.screens
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -53,6 +55,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun HomeScreen(innerPadding: PaddingValues) {
     var natureList by remember {
@@ -95,81 +98,109 @@ fun HomeScreen(innerPadding: PaddingValues) {
         return // Avoid drawing the rest of the UI
     }
 
-    natureList.firstOrNull()?.let { nature ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-                .verticalScroll(rememberScrollState()),
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        // ✅ Wrap Row in item
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Animals",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
+                Text(
+                    text = "Animals",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
 
-                    Button(
-                        onClick = { /* Add your click logic here */ },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFF8DC)),
-                        shape = RoundedCornerShape(16.dp),
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
+                Button(
+                    onClick = { /* Add your click logic here */ },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFF8DC)),
+                    shape = RoundedCornerShape(16.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "Agregar",
-                                tint = Color.Black
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(text = "Agregar", color = Color.Black)
-                        }
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Agregar",
+                            tint = Color.Black
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(text = "Agregar", color = Color.Black)
                     }
                 }
+            }
+        }
 
+        // ✅ Also already wrapped correctly
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = "Conoce los animales más increibles del mundo",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     color = Color.White
                 )
+            }
+        }
 
-                Spacer(modifier = Modifier.height(4.dp))
+        // ✅ Animal list
+        items(natureList) { nature ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFF444444))
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Box(
                     modifier = Modifier
                         .size(200.dp)
                         .clip(CircleShape)
                         .clickable {
-                            // Add your onClick action here
+                            // Add onClick logic if needed
                         }
                 ) {
                     AsyncImage(
                         model = nature.image,
-                        contentDescription = null,
+                        contentDescription = "Animal Image",
                         placeholder = painterResource(R.drawable.ic_launcher_background),
                         error = painterResource(R.drawable.ic_launcher_background),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.matchParentSize()
                     )
                 }
-
-                // ✅ Use real name from API
-                Text(text = nature.name, color = Color.White)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = nature.name,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
+
+
+
 }
