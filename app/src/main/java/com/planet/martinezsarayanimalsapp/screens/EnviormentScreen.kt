@@ -17,15 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,6 +36,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil3.compose.AsyncImage
 import com.planet.martinezsarayanimalsapp.R
 import com.planet.martinezsarayanimalsapp.models.EnvironmentsItem
@@ -54,7 +48,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
-fun EnviormentScreen (innerPadding: PaddingValues){
+fun EnviormentScreen (
+    innerPadding: PaddingValues,
+    navController: NavHostController,
+    onAguilasClick: (String) -> Unit ){
     var environmentsList by remember {
         mutableStateOf<List<EnvironmentsItem>>(emptyList())
     }
@@ -119,38 +116,43 @@ fun EnviormentScreen (innerPadding: PaddingValues){
             }
         }
 
-        items(environmentsList) { environments ->
+        items(environmentsList) { environment ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color(0xFF444444))
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .clickable {
+                        Log.i("ClickedEnvironment", environment._id.toString())
+                        navController.navigate("enviorment-detail-screen/${environment._id}")
+                    },
+                //onAguilasClick : (environment) -> unit
+
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-
                 Spacer(modifier = Modifier.height(8.dp))
+
+
 
                 Box(
                     modifier = Modifier
                         .size(200.dp)
                         .clip(CircleShape)
-                        .clickable {
-                            // Add onClick logic if needed
-                        }
                 ) {
                     AsyncImage(
-                        model = environments.image,
-                        contentDescription = "Animal Image",
+                        model = environment.image,
+                        contentDescription = "Environment Image",
                         placeholder = painterResource(R.drawable.ic_launcher_background),
                         error = painterResource(R.drawable.ic_launcher_background),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.matchParentSize()
                     )
                 }
+
                 Spacer(modifier = Modifier.height(8.dp))
+
                 Text(
-                    text = environments.name,
+                    text = environment.name,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
@@ -159,5 +161,6 @@ fun EnviormentScreen (innerPadding: PaddingValues){
                 )
             }
         }
+
     }
 }

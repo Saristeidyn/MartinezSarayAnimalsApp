@@ -35,9 +35,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.planet.martinezsarayanimalsapp.screens.AnimalDetailScreen
+import com.planet.martinezsarayanimalsapp.screens.EnviormentDetailScreen
 import com.planet.martinezsarayanimalsapp.screens.EnviormentScreen
 import com.planet.martinezsarayanimalsapp.screens.HomeScreen
 import com.planet.martinezsarayanimalsapp.ui.theme.MartinezSarayAnimalsAppTheme
@@ -115,10 +119,49 @@ class MainActivity : ComponentActivity() {
                 { innerPadding ->
                     NavHost(navController = navController, startDestination = "inicio"){
                         composable(route = "inicio") {
-                            HomeScreen(innerPadding = innerPadding)
+                            HomeScreen(innerPadding = innerPadding, navController = navController)
                         }
+                        composable(
+                            route = "animal-detail-screen/{id}",
+                            arguments = listOf(
+                                navArgument("id"){
+                                    type= NavType.StringType
+                                    nullable=false
+                                }
+                            )
+                        ){
+                            val id = it.arguments?.getString("id") ?: ""
+                            AnimalDetailScreen(
+                                innerPadding = innerPadding,
+                                animalId = id
+                            )
+                        }
+
+
+
                         composable(route = "ambiente") {
-                            EnviormentScreen(innerPadding = innerPadding)
+                            EnviormentScreen(
+                                innerPadding = innerPadding,
+                                navController = navController,
+                                onAguilasClick = { id ->
+                                    navController.navigate("enviorment-detail-screen/$id")
+                                }
+                            )
+                        }
+                        composable(
+                            route = "enviorment-detail-screen/{id}",
+                            arguments = listOf(
+                                navArgument("id"){
+                                    type= NavType.StringType
+                                    nullable=false
+                                }
+                            )
+                        ){
+                            val id = it.arguments?.getString("id") ?: ""
+                            EnviormentDetailScreen(
+                                innerPadding = innerPadding,
+                                enviormentId = id
+                            )
                         }
                     }
                 }

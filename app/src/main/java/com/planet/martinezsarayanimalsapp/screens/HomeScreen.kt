@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.planet.martinezsarayanimalsapp.R
 import com.planet.martinezsarayanimalsapp.models.NatureItem
@@ -57,7 +58,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun HomeScreen(innerPadding: PaddingValues) {
+fun HomeScreen(innerPadding: PaddingValues, navController: NavHostController) {
     var natureList by remember {
         mutableStateOf<List<NatureItem>>(emptyList())
     }
@@ -164,7 +165,11 @@ fun HomeScreen(innerPadding: PaddingValues) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color(0xFF444444))
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .clickable {
+                        Log.i("ClickedAnimal", nature.id.toString())
+                        navController.navigate("animal-detail-screen/${nature.id}")
+                    },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
@@ -200,7 +205,4 @@ fun HomeScreen(innerPadding: PaddingValues) {
             }
         }
     }
-
-
-
 }
