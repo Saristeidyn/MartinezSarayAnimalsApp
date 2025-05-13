@@ -46,7 +46,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.planet.martinezsarayanimalsapp.R
-import com.planet.martinezsarayanimalsapp.models.NatureItem
+import com.planet.martinezsarayanimalsapp.models.EnvironmentsItem
+import com.planet.martinezsarayanimalsapp.services.EnvironmentsService
 import com.planet.martinezsarayanimalsapp.services.NatureService
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
@@ -54,8 +55,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
 fun EnviormentScreen (innerPadding: PaddingValues){
-    var natureList by remember {
-        mutableStateOf<List<NatureItem>>(emptyList())
+    var environmentsList by remember {
+        mutableStateOf<List<EnvironmentsItem>>(emptyList())
     }
     val scope = rememberCoroutineScope()
     val BASE_URL = "https://animals.juanfrausto.com/api/"
@@ -68,8 +69,8 @@ fun EnviormentScreen (innerPadding: PaddingValues){
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
 
-                val natureService = retrofit.create(NatureService::class.java)
-                natureList = natureService.getNature()
+                val environmentsService = retrofit.create(EnvironmentsService::class.java)
+                environmentsList = environmentsService.getEnvironments()
             } catch (e: Exception) {
                 Log.e("HomeScreen", "Failed to fetch: ${e.message}", e)
             }
@@ -77,7 +78,7 @@ fun EnviormentScreen (innerPadding: PaddingValues){
     }
 
     // ✅ Check if list is empty, not null
-    if (natureList.isEmpty()) {
+    if (environmentsList.isEmpty()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -100,7 +101,6 @@ fun EnviormentScreen (innerPadding: PaddingValues){
             .padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // ✅ Wrap Row in item
         item {
             Row(
                 modifier = Modifier
@@ -119,7 +119,7 @@ fun EnviormentScreen (innerPadding: PaddingValues){
             }
         }
 
-        items(natureList) { nature ->
+        items(environmentsList) { environments ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -140,7 +140,7 @@ fun EnviormentScreen (innerPadding: PaddingValues){
                         }
                 ) {
                     AsyncImage(
-                        model = nature.image,
+                        model = environments.image,
                         contentDescription = "Animal Image",
                         placeholder = painterResource(R.drawable.ic_launcher_background),
                         error = painterResource(R.drawable.ic_launcher_background),
@@ -150,7 +150,7 @@ fun EnviormentScreen (innerPadding: PaddingValues){
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = nature.name,
+                    text = environments.name,
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
