@@ -1,6 +1,7 @@
 package com.planet.martinezsarayanimalsapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -69,7 +70,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .padding(12.dp)
+                                    .padding(4.dp)
                                     .width(250.dp)
                                     .clip(RoundedCornerShape(50.dp))
                                     .align(Alignment.BottomCenter)
@@ -118,8 +119,15 @@ class MainActivity : ComponentActivity() {
                 )
                 { innerPadding ->
                     NavHost(navController = navController, startDestination = "inicio"){
+
                         composable(route = "inicio") {
-                            HomeScreen(innerPadding = innerPadding, navController = navController)
+                            HomeScreen(
+                                innerPadding = innerPadding,
+                                navController = navController,
+                                onAguilasClick = { id ->
+                                    navController.navigate("enviorment-detail-screen/$id")
+                                }
+                            )
                         }
                         composable(
                             route = "animal-detail-screen/{id}",
@@ -131,13 +139,13 @@ class MainActivity : ComponentActivity() {
                             )
                         ){
                             val id = it.arguments?.getString("id") ?: ""
+                            Log.i("AnimalDetail", "Received ID: $id")
+
                             AnimalDetailScreen(
                                 innerPadding = innerPadding,
                                 animalId = id
                             )
                         }
-
-
 
                         composable(route = "ambiente") {
                             EnviormentScreen(

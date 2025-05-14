@@ -6,7 +6,7 @@ data class NatureItem(
     val description: String,
     val environmentId: String,
     val facts: List<String>,
-    @SerializedName("_id") val id: String,
+    val id: String,
     val image: String,
     val imageGallery: List<String>,
     val name: String

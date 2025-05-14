@@ -51,7 +51,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 fun EnviormentScreen (
     innerPadding: PaddingValues,
     navController: NavHostController,
-    onAguilasClick: (String) -> Unit ){
+    onAguilasClick: (String) -> Unit
+){
     var environmentsList by remember {
         mutableStateOf<List<EnvironmentsItem>>(emptyList())
     }
@@ -126,7 +127,6 @@ fun EnviormentScreen (
                         Log.i("ClickedEnvironment", environment._id.toString())
                         navController.navigate("enviorment-detail-screen/${environment._id}")
                     },
-                //onAguilasClick : (environment) -> unit
 
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

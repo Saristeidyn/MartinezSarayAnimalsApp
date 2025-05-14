@@ -58,7 +58,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun HomeScreen(innerPadding: PaddingValues, navController: NavHostController) {
+fun HomeScreen(
+    innerPadding: PaddingValues,
+    navController: NavHostController,
+    onAguilasClick: (String) -> Unit
+) {
     var natureList by remember {
         mutableStateOf<List<NatureItem>>(emptyList())
     }
@@ -180,9 +184,7 @@ fun HomeScreen(innerPadding: PaddingValues, navController: NavHostController) {
                     modifier = Modifier
                         .size(200.dp)
                         .clip(CircleShape)
-                        .clickable {
-                            // Add onClick logic if needed
-                        }
+
                 ) {
                     AsyncImage(
                         model = nature.image,
